@@ -172,7 +172,7 @@ wire  [7:0] ioctl_dout;
 
 wire [10:0] ps2_key;
 
-wire [15:0] joy1 = |status[31:30] ? joydb15_1 : (mod_club | mod_jmpst) ? joy1a : (joy1a | joy2a);
+wire [15:0] joy1 = |status[31:30] ? (mod_club | mod_jmpst) ? joydb15_1 : (joydb15_1 | joydb15_2) : (mod_club | mod_jmpst) ? joy1a : (joy1a | joy2a);
 wire [15:0] joy2 =  status[31]    ? joydb15_2 : status[30] ? joy1a : (mod_club | mod_jmpst) ? joy2a : (joy1a | joy2a);
 wire [15:0] joy1a;
 wire [15:0] joy2a;
