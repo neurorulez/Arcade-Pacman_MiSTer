@@ -174,10 +174,13 @@ wire  [7:0] ioctl_dout;
 
 wire [10:0] ps2_key;
 
-wire [15:0] joy1 =  status[31] ? (mod_club | mod_jmpst) ? {joydb15_1[9],joydb15_1[7],joydb15_1[8],joydb15_1[4:0]} : ({joydb15_1[9],joydb15_1[7],joydb15_1[8],joydb15_1[4:0]} | {joydb15_2[9],joydb15_2[8],joydb15_2[7],joydb15_2[4:0]}) : status[30] ? {joydb15_1[9],joydb15_1[7],joydb15_1[8],joydb15_1[4:0]} : (mod_club | mod_jmpst) ? joy1a : (joy1a | joy2a);
-wire [15:0] joy2 =  status[31] ? {joydb15_2[9],joydb15_2[8],joydb15_2[7],joydb15_2[4:0]} : status[30] ? joy1a : (mod_club | mod_jmpst) ? joy2a : (joy1a | joy2a);
-wire [15:0] joy1a;
-wire [15:0] joy2a;
+wire [15:0] joy1 = (mod_club | mod_jmpst) ? joy1a : (joy1a | joy2a);
+wire [15:0] joy2 = (mod_club | mod_jmpst) ? joy2a : (joy1a | joy2a);
+wire [15:0] joy1a_USB;
+wire [15:0] joy2a_USB;
+
+wire [15:0] joy1a = |status[31:30] ? {joydb15_1[11],joydb15_1[9],joydb15_1[10],joydb15_1[4:0]} : joy1a_USB;
+wire [15:0] joy2a =  status[31]    ? {joydb15_2[11],joydb15_2[10],joydb15_2[9],joydb15_2[4:0]} : status[30] ? joy1a_USB : joy2a_USB;
 
 wire [21:0] gamma_bus;
 
@@ -214,8 +217,8 @@ hps_io #(.STRLEN($size(CONF_STR)>>3)) hps_io
 	.ioctl_index(ioctl_index),
 
 	.joy_raw(joydb15_1[5:0]),
-	.joystick_0(joy1a),
-	.joystick_1(joy2a),
+	.joystick_0(joy1a_USB),
+	.joystick_1(joy2a_USB),
 	.ps2_key(ps2_key)
 );
 
